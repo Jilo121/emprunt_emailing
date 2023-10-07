@@ -7,8 +7,8 @@ from funBank import *
 window = tk.Tk()
 window.title("Alert client")
 # window.geometry("900x750")
-window.minsize(1200, 800)
-# window.maxsize(1200, 800)
+window.minsize(900, 800)
+window.maxsize(1200, 800)
 
 # ------------------ add theme -------------------------
 
@@ -129,6 +129,24 @@ update_btn = ttk.Button(btm_frame, text="Mettre à jours", width=20)
 update_btn.grid(row=1, column=0, pady=5)
 
 # ------------------ RIGHT FRAME -------------------------
+
+treescroll = ttk.Scrollbar(right_frame)
+treescroll.pack(side="right", fill="y")
+
+cols_name = ("Nom", "Prenom", "Email", "Nom du domaine", "Type d'emprunt", "Durée", "Montant", "Date d'emprunt")
+treeview = ttk.Treeview(right_frame, show="headings", columns=cols_name, height=50)
+treeview.column("Nom", width=30)
+treeview.column("Prenom", width=30)
+treeview.column("Email", width=30)
+treeview.column("Nom du domaine", width=40)
+treeview.column("Type d'emprunt", width=20)
+treeview.column("Durée", width=5)
+treeview.column()
+treeview.column()
+treeview.column()
+treeview.pack()
+treescroll.config(command=treeview.yview)
+
 
 
 window.mainloop()

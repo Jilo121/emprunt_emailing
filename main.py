@@ -1,6 +1,9 @@
 import tkinter as tk
 from tkinter import ttk
-from funBank import *
+# from funBank import *
+import sqlite3
+import bdd_Bank
+# import tkcalendar
 
 # ------------------ create windows -------------------------
 
@@ -8,7 +11,7 @@ window = tk.Tk()
 window.title("Alert client")
 # window.geometry("900x750")
 window.minsize(900, 800)
-window.maxsize(1200, 800)
+# window.maxsize(1200, 800)
 
 # ------------------ add theme -------------------------
 
@@ -21,6 +24,16 @@ style.theme_use("forest-dark")
 frame = tk.Frame()
 frame.pack()
 
+# ------------------ BDD -------------------------
+
+# def insertdonnee():
+#     conn = sqlite3.connect('database/information.db')
+
+#     curseur = conn.cursor()
+#     conn.execute("INSERT INTO information(name, lastname, email, contact, adresse, type_com, nom_dom, activity, type_emp, duree, montant_dem, date_dem) VALUES('?,?,?,?,?,?,?,?,?,?,?,?')",(name_entry.get(),lastname_entry.get(),email_entry.get(),contact_entry.get(),adresse_entry.get(),type_com_entry.get(),nom_dom_entry.get(),activity_entry.get(),type_emp_entry.get(),duree_entry.get(),montant_dem_entry.get(),date_entry.get()))
+#     conn.commit()
+#     conn.close()
+
 # ------------------ frame label -------------------------
 
 top_frame = ttk.Frame(frame)
@@ -29,8 +42,23 @@ top_frame.grid(row=0, column=0)
 btm_frame = ttk.Frame(frame)
 btm_frame.grid(row=1, column=0, pady=20)
 
-right_frame = ttk.Frame(frame)
-right_frame.grid(row=0, rowspan=2, column=1, padx=10)
+right_top_frame = ttk.Frame(frame, height=30)
+right_top_frame.grid(row=0,rowspan=2, column=1)
+
+right_btm_frame = ttk.Frame(frame)
+right_btm_frame.grid(row=1, column=1)
+
+childframe1 = ttk.Frame(right_top_frame)
+childframe2 = ttk.Frame(right_top_frame)
+
+childframe1.grid(row=0, column=0)
+childframe2.grid(row=1, column=0)
+
+childframe1b = ttk.Frame(right_btm_frame)
+childframe2b = ttk.Frame(right_btm_frame)
+
+childframe1b.grid(row=0, column=0)
+childframe2b.grid(row=1, column=0)
 # ------------------ LEFT Content -------------------------
 
 info_peso_titre = ttk.Label(top_frame,text="INFORMATION PERSONNELLE:", font=("Arial", 20))
@@ -116,10 +144,32 @@ date_dem_label.grid(row=14, column=0)
 date_entry = ttk.Entry(top_frame, width=30)
 date_entry.grid(row=14, column=1,padx=10,pady= 5)
 
+# sel = tk.StringVar()
 
+# cal = tkcalendar.DateEntry(top_frame, selectmode='day', textvariable=sel)
+# cal.grid(row=14, column=2, padx=15)
+
+# sel.trace('w', top_frame)
+
+# ------------------ Liste des donnée -------------------------
+
+name_ = name_entry.get()
+lastname_ = lastname_entry.get()
+email_ = email_entry.get()
+contact = contact_entry.get()
+adresse = adresse_entry.get()
+type_com = type_com_entry.get()
+nom_dom = nom_dom_entry.get()
+activity = activity_entry.get()
+type_emp = type_emp_entry.get()
+duree = duree_entry.get()
+montant_dem = montant_dem_entry.get()
+date_dem = date_entry.get()
+id = 5
 # ------------------ Content BTM-------------------------
 
 rec_btn = ttk.Button(btm_frame, text="Enregistrer", width=20)
+#, command=bdd_Bank.insertdonnee(id,name_, lastname_, email_, contact, adresse, type_com, nom_dom, activity, type_emp, duree, montant_dem, date_dem)
 rec_btn.grid(row=0, column=0)
 
 clear_btn = ttk.Button(btm_frame, text="Effacer", width=20)
@@ -130,23 +180,141 @@ update_btn.grid(row=1, column=0, pady=5)
 
 # ------------------ RIGHT FRAME -------------------------
 
-treescroll = ttk.Scrollbar(right_frame)
+treescroll = ttk.Scrollbar(childframe1)
 treescroll.pack(side="right", fill="y")
 
-cols_name = ("Nom", "Prenom", "Email", "Nom du domaine", "Type d'emprunt", "Durée", "Montant", "Date d'emprunt")
-treeview = ttk.Treeview(right_frame, show="headings", columns=cols_name, height=50)
-treeview.column("Nom", width=30)
-treeview.column("Prenom", width=30)
-treeview.column("Email", width=30)
-treeview.column("Nom du domaine", width=40)
-treeview.column("Type d'emprunt", width=20)
-treeview.column("Durée", width=5)
-treeview.column()
-treeview.column()
-treeview.column()
+# treescroll2 = ttk.Scrollbar(right_top_frame)
+# treescroll2.pack(side="bottom", fill="x")
+
+titrepart1 = ttk.Label(childframe1, text="En cours:", font=("Arial", 20))
+titrepart1.pack()
+
+# form_scroll = ttk.Scrollbar(top_frame)
+# form_scroll.grid(side="right", fill="y")
+# treescroll.config(command=top_frame)
+
+treeview= ttk.Treeview(childframe1, height=10) #show="headings"
+# column
+treeview['columns'] = ("Nom","Prenom","Email","Nom du domaine","Type d'emprunt","Durée","Montant","Date d'emprunt")
+treeview.column("#0", width=20, anchor="w")
+treeview.column("Nom", width=150, anchor="w")
+treeview.column("Prenom", width=100, anchor="w")
+treeview.column("Email", width=200, anchor="w")
+treeview.column("Nom du domaine", width=100, anchor="w")
+treeview.column("Type d'emprunt", width=100, anchor="w")
+treeview.column("Durée", width=100, anchor="w")
+treeview.column("Montant", width=100, anchor="w")
+treeview.column("Date d'emprunt", width=100, anchor="w")
+
+# heading
+treeview.heading("#0", text="Label", anchor="w")
+treeview.heading("Nom", text="Nom", anchor="w")
+treeview.heading("Prenom", text="Prenom", anchor="w")
+treeview.heading("Email", text="Email", anchor="w")
+treeview.heading("Nom du domaine", text="Nom du domaine", anchor="w")
+treeview.heading("Type d'emprunt", text="Type d'emprunt", anchor="w")
+treeview.heading("Durée", text="Durée", anchor="w")
+treeview.heading("Montant", text="Montant", anchor="w")
+treeview.heading("Date d'emprunt", text="Date d'emprunt", anchor="w")
+
+# ---------------------------- insert data ----------------------------------
+
+donnee = bdd_Bank.prendredonnee()
+count = 0
+for disp in donnee:
+    treeview.insert(parent='', index='end',iid=count,text='', values=(disp[1],disp[2],disp[3],disp[4],disp[5],disp[6],disp[7],disp[8]))
+    count += 1
+# treeview.insert(parent="", index='end', iid=0, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+# treeview.insert(parent="", index='end', iid=1, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+# treeview.insert(parent="", index='end', iid=2, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+# treeview.insert(parent="", index='end', iid=3, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+# treeview.insert(parent="", index='end', iid=4, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+# treeview.insert(parent="", index='end', iid=5, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+# treeview.insert(parent="", index='end', iid=6, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+# treeview.insert(parent="", index='end', iid=7, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+# treeview.insert(parent="", index='end', iid=8, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+# treeview.insert(parent="", index='end', iid=9, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+# treeview.insert(parent="", index='end', iid=10, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+# treeview.insert(parent="", index='end', iid=11, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+# treeview.insert(parent="", index='end', iid=12, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+# treeview.insert(parent="", index='end', iid=13, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+# treeview.insert(parent="", index='end', iid=14, text="", values=("Andriamampiandra","Diamondra Fitiavana","adiamonrafitiavana@gmail.com","NB Concept","TCP",12,5000000,"10-05-2023","a"))
+# treeview.insert(parent="", index='end', iid=15, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+# treeview.insert(parent="", index='end', iid=16, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+# treeview.insert(parent="", index='end', iid=17, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+# treeview.insert(parent="", index='end', iid=18, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+# treeview.insert(parent="", index='end', iid=19, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+# treeview.insert(parent="", index='end', iid=20, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+# treeview.insert(parent="", index='end', iid=21, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+# treeview.insert(parent="", index='end', iid=22, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+# treeview.insert(parent="", index='end', iid=23, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+# treeview.insert(parent="", index='end', iid=24, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+# treeview.insert(parent="", index='end', iid=25, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+# treeview.insert(parent="", index='end', iid=26, text="", values=("Nosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+
 treeview.pack()
 treescroll.config(command=treeview.yview)
+# treescroll2.config(command=treeview.xview)
 
+# ----------------------------------------------------------------- treeview2 data ------------------------------------------------------------------------------------------
+
+tree2label = ttk.Label(childframe2, text="Terminer :", font=("Arial",20))
+tree2label.pack()
+
+treeview2= ttk.Treeview(childframe2, height=10) #show="headings"
+# column
+treeview2['columns'] = ("Nom","Prenom","Email","Nom du domaine","Type d'emprunt","Durée","Montant","Date d'emprunt")
+treeview2.column("#0", width=20, anchor="w")
+treeview2.column("Nom", width=150, anchor="w")
+treeview2.column("Prenom", width=100, anchor="w")
+treeview2.column("Email", width=200, anchor="w")
+treeview2.column("Nom du domaine", width=100, anchor="w")
+treeview2.column("Type d'emprunt", width=100, anchor="w")
+treeview2.column("Durée", width=100, anchor="w")
+treeview2.column("Montant", width=100, anchor="w")
+treeview2.column("Date d'emprunt", width=100, anchor="w")
+
+# heading
+treeview2.heading("#0", text="Label", anchor="w")
+treeview2.heading("Nom", text="Nom", anchor="w")
+treeview2.heading("Prenom", text="Prenom", anchor="w")
+treeview2.heading("Email", text="Email", anchor="w")
+treeview2.heading("Nom du domaine", text="Nom du domaine", anchor="w")
+treeview2.heading("Type d'emprunt", text="Type d'emprunt", anchor="w")
+treeview2.heading("Durée", text="Durée", anchor="w")
+treeview2.heading("Montant", text="Montant", anchor="w")
+treeview2.heading("Date d'emprunt", text="Date d'emprunt", anchor="w")
+
+#--------------------------------------------- insert data --------------------------------------------------
+treeview2.insert(parent="", index='end', iid=0, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+treeview2.insert(parent="", index='end', iid=1, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+treeview2.insert(parent="", index='end', iid=2, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+treeview2.insert(parent="", index='end', iid=3, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+treeview2.insert(parent="", index='end', iid=4, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+treeview2.insert(parent="", index='end', iid=5, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+treeview2.insert(parent="", index='end', iid=6, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+treeview2.insert(parent="", index='end', iid=7, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+treeview2.insert(parent="", index='end', iid=8, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+treeview2.insert(parent="", index='end', iid=9, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+treeview2.insert(parent="", index='end', iid=10, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+treeview2.insert(parent="", index='end', iid=11, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+treeview2.insert(parent="", index='end', iid=12, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+treeview2.insert(parent="", index='end', iid=13, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+treeview2.insert(parent="", index='end', iid=14, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+treeview2.insert(parent="", index='end', iid=15, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+treeview2.insert(parent="", index='end', iid=16, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+treeview2.insert(parent="", index='end', iid=17, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+treeview2.insert(parent="", index='end', iid=18, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+treeview2.insert(parent="", index='end', iid=19, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+treeview2.insert(parent="", index='end', iid=20, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+treeview2.insert(parent="", index='end', iid=21, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+treeview2.insert(parent="", index='end', iid=22, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+treeview2.insert(parent="", index='end', iid=23, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+treeview2.insert(parent="", index='end', iid=24, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+treeview2.insert(parent="", index='end', iid=25, text="", values=("Lalainarinosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+treeview2.insert(parent="", index='end', iid=26, text="", values=("Nosy","Hery Hasina","nosyhery.hasina@gmail.com","TN","Micro",12,450000,"12-02-2023","a"))
+
+treeview2.pack()
 
 
 window.mainloop()

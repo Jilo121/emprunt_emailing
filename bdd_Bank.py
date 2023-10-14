@@ -22,6 +22,19 @@ def prendredonnee():
     conn.commit()
     conn.close()
     return rows
+
+# test 
+
+rowss = prendredonnee()
+
+duree_mail = int(rowss[0][10])
+send_mail = int(rowss[0][13])
+
+print(duree_mail)
+print(send_mail)
+
+print(duree_mail - send_mail)
+
 # def prendredonnee(done):
 #     conn = sqlite3.connect('database/information.db')
 #     curseur = conn.cursor()

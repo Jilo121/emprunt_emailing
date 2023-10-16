@@ -23,31 +23,17 @@ def prendredonnee():
     conn.close()
     return rows
 
-# test 
-
-rowss = prendredonnee()
-
-duree_mail = int(rowss[0][10])
-send_mail = int(rowss[0][13])
-
-print(duree_mail)
-print(send_mail)
-
-print(duree_mail - send_mail)
-
-# def prendredonnee(done):
-#     conn = sqlite3.connect('database/information.db')
-#     curseur = conn.cursor()
-#     curseur.execute("SELECT * FROM information WHERE done=?", done)
-#     rows = curseur.fetchall()
-#     conn.commit()
-#     conn.close()
-#     return rows
-
 def metreajours(name,lastname,email,contact,adresse,type_com,nom_dom,activity,type_emp,duree,montant,date_dem):
     conn = sqlite3.connect('database/typeemp.db')
     curseur = conn.cursor()
     curseur.execute("UPDATE information SET name=?, lastname=?, email=?, contact=?, adresse=?, type_com=?, nom_dom=?, activity=?, type_emp=?, duree=?, montant_dem=?, date_dem=? WHERE id_info=?;",(name,lastname,email,contact,adresse,type_com,nom_dom,activity,type_emp,duree,montant,date_dem))
+    conn.commit()
+    conn.close()
+
+def metreajours(id_tab):
+    conn = sqlite3.connect('database/typeemp.db')
+    curseur = conn.cursor()
+    curseur.execute("UPDATE information SET terminer=1 WHERE id_info=?;",(id_tab))
     conn.commit()
     conn.close()
 
@@ -57,3 +43,12 @@ def deleteRec(id):
     curseur.execute("DELETE FROM information WHERE id_info=?;", (id))
     conn.commit()
     conn.close()
+
+def prendreemail():
+    conn = sqlite3.connect('database/typeemp.db')
+    curseur = conn.cursor()
+    curseur.execute("SELECT email FROM information")
+    rows = curseur.fetchall()
+    conn.commit()
+    conn.close()
+    return rows

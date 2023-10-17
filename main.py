@@ -169,7 +169,7 @@ date_dem = date_entry.get()
 id = 5
 # ------------------ Content BTM-------------------------
 
-rec_btn = ttk.Button(btm_frame, text="Enregistrer", width=20)
+rec_btn = ttk.Button(btm_frame, text="Enregistrer", width=20, command=bdd_Bank.insertdonnee())
 #, command=bdd_Bank.insertdonnee(id,name_, lastname_, email_, contact, adresse, type_com, nom_dom, activity, type_emp, duree, montant_dem, date_dem)
 rec_btn.grid(row=0, column=0)
 

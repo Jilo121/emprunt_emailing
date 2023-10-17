@@ -7,12 +7,35 @@ def createTable():
     conn.commit()
     conn.close()
 
-def insertdonnee(id_info,name,lastname,email,contact,adresse,type_com,nom_dom,activity,type_emp,duree,montant,date_dem):
-    conn = sqlite3.connect('database/typeemp.db')
-    curseur = conn.cursor()
-    curseur.execute("INSERT INTO information VALUES('null,?,?,?,?,?,?,?,?,?,?,?,?,?,?')",(id_info,name,lastname,email,contact,adresse,type_com,nom_dom,activity,type_emp,duree,montant,date_dem))
+def insertdonnee():
+    # Récupérer les valeurs des entrées de l'utilisateur
+    name_ = name_entry.get()
+    lastname_ = lastname_entry.get()
+    email_ = email_entry.get()
+    contact = contact_entry.get()
+    adresse = adresse_entry.get()
+    type_com = type_com_entry.get()
+    nom_dom = nom_dom_entry.get()
+    activity = activity_entry.get()
+    type_emp = type_emp_entry.get()
+    duree = duree_entry.get()
+    montant_dem = montant_dem_entry.get()
+    date_dem = date_entry.get()
+
+    # Insérer les données dans la base de données
+    conn = sqlite3.connect('database/information.db')
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO information(name, lastname, email, contact, adresse, type_com, nom_dom, activity, type_emp, duree, montant_dem, date_dem) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                   (name_, lastname_, email_, contact, adresse, type_com, nom_dom, activity, type_emp, duree, montant_dem, date_dem))
     conn.commit()
     conn.close()
+
+# def insertdonnee(id_info,name,lastname,email,contact,adresse,type_com,nom_dom,activity,type_emp,duree,montant,date_dem):
+#     conn = sqlite3.connect('database/typeemp.db')
+#     curseur = conn.cursor()
+#     curseur.execute("INSERT INTO information VALUES('null,?,?,?,?,?,?,?,?,?,?,?,?,?,?')",(id_info,name,lastname,email,contact,adresse,type_com,nom_dom,activity,type_emp,duree,montant,date_dem))
+#     conn.commit()
+#     conn.close()
 
 def prendredonnee():
     conn = sqlite3.connect('database/typeemp.db')

@@ -1,10 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
 import sqlite3
-# from datetime import datetime, date, timedelta 
-# import time
-# noinspection PyUnresolvedReferences
-# from dateutil.relativedelta import relativedelta
 from send_email import lancerproc
 from threading import Thread
 
@@ -30,6 +26,8 @@ def createTable():
                         done INTEGER);""")
     conn.commit()
     conn.close()
+
+# creation de la table de la base de donner si n'estiste pas
 
 createTable()
 
@@ -161,13 +159,16 @@ def effacer_champs():
     montant_dem_entry.delete(0, tk.END)
     date_entry.delete(0, tk.END)
 
+
 def afficherdonner():
-    effacer_champs()
+    for row in treeview.get_children():
+        treeview.delete(row)
     donnee = prendredonnee()
     count = 0
     for disp in donnee:
-        treeview.insert(parent='', index='end',iid=count,text='', values=(disp[0],disp[1],disp[2],disp[3],disp[4],disp[5],disp[6],disp[7],disp[8],disp[9],disp[10],disp[11],disp[12]))
+        treeview.insert(parent='', index='end', iid=count, text='', values=(disp[0],disp[1],disp[2],disp[3],disp[4],disp[5],disp[6],disp[7],disp[8],disp[9],disp[10],disp[11],disp[12]))
         count += 1
+    print("afficher donner executer ")
 
 # ------------------ create windows -------------------------
 
@@ -312,7 +313,7 @@ clear_btn.grid(row=3, column=7, padx=10)
 update_btn = ttk.Button(top_frame, text="Mettre à jours", width=20, command=metreajours)
 update_btn.grid(row=4, column=7, pady=5)
 
-actualiser_btn = ttk.Button(top_frame, text="Actualiser la table", width=20)
+actualiser_btn = ttk.Button(top_frame, text="Actualiser la table", width=20, command=afficherdonner)
 actualiser_btn.grid(row=5, column=7, pady=5)
 
 # ------------------ RIGHT FRAME -------------------------

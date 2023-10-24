@@ -3,13 +3,14 @@ from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
 import smtplib
 import sqlite3
+from tkinter import messagebox
 
 
-# joursrecule = timedelta(days=5) 
+# joursrecule = timedelta(days=5)
 
-email = "nosyhery.hasina@gmail.com"
-app_password = "yaqf jspt nnhh tsrj"
-
+#ajout d'email :
+email = ""
+app_password = ""
 
 
 def prendredonnee():
@@ -36,11 +37,10 @@ def envoyermail(receiver,dateadhesion,duree):
     i = 0
     while i <= int(duree):
         joursenvoie = date.fromisoformat(dateadhesion) - relativedelta(days=5) + relativedelta(months=i)
-        print(joursenvoie)
         todaydate = date.today()
-        print(todaydate)
-        print(joursenvoie)
         if (joursenvoie == todaydate):
+            print(joursenvoie)
+
             subject = "Rappel"
             message = "On vous fait savoir que dans 5 jours, vous devez payer une part de l'argent"
             text = f"Subject: {subject}\n\n{message}"
@@ -51,6 +51,7 @@ def envoyermail(receiver,dateadhesion,duree):
                 server.login(email, app_password)
                 server.sendmail(email, receiver, text)
                 print("Envoyé à", receiver)
+                messagebox.showinfo(title="Email envoyer à :", message=receiver)
 
                 if (i == int(duree)):
                     miseajoursnbremail(row[0])
@@ -58,8 +59,10 @@ def envoyermail(receiver,dateadhesion,duree):
 
             except Exception as e:
                 print(e,":", receiver,"n'a pas reçus son email de rapelle")
+                messagebox.showerror(title="Erreur!!",message="Erreur de connexion")
+
         else:
-            print(" :) ")
+            print(" Pas d'email a envoyer ")
         i += 1
 
 
